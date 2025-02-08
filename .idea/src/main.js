@@ -38,12 +38,13 @@ function extraLetters() {
 }
 document.getElementById('game').addEventListener("keydown", ev => {
     const key = ev.key;
-    const currentWord = document.querySelector('.word.current')
-    let currentLetter = document.querySelector('.letter.current');
+    let currentWord = document.querySelector('.word.current')
+    const currentLetter = document.querySelector('.letter.current');
     const expected = currentLetter?.innerHTML ||' ';
     const isLetter = key.length ===1 && key !==' ';
     const isSpace = key === " ";
-
+    const isBackspace = key === 'Backspace';
+    const isFirstLetter = currentLetter === currentWord.firstChild;
     console.log({key,expected})
 
 
@@ -54,14 +55,6 @@ document.getElementById('game').addEventListener("keydown", ev => {
 
             if (currentLetter.nextSibling && currentLetter.nextSibling.classList.contains('letter')) {
                 addClass(currentLetter.nextSibling, 'current');
-            } else {
-                // If no more letters exist, append incorrect letter to the end of the word
-                if (key !== expected) {
-                    const incorrectLetter = document.createElement("span");
-                    incorrectLetter.innerHTML = key;
-                    incorrectLetter.className = 'letter incorrect extra';
-                    currentWord.appendChild(incorrectLetter);
-                }
             }
         } else {
             // If currentLetter is null, it means we've already reached the end of the word
@@ -92,14 +85,84 @@ document.getElementById('game').addEventListener("keydown", ev => {
     }
 
 
+
+
+    if (isBackspace) {
+        console.log({currentLetter})
+        let extraLetters = document.querySelectorAll('.letter.incorrect.extra');
+        if (extraLetters.length > 0) {
+            extraLetters[extraLetters.length - 1].remove();
+        } else {
+            // let isFirstLetter = currentLetter.previousSibling ? false: true;
+
+            // If at the start of the word and it's the first word, do nothing
+            if (isFirstLetter && !currentWord.previousSibling) {
+                return;
+            }
+
+            // If at the start of the word, move to the last letter of the previous word
+            if (isFirstLetter && currentWord) {
+                console.log("اول حرف ولازم يرجع كلمة")
+                removeClass(currentWord, 'current');
+                addClass(currentWord.previousSibling, 'current');
+                removeClass(currentLetter, 'current');
+                addClass(currentWord.previousSibling.lastChild, 'current');
+                removeClass(currentWord.previousSibling.lastChild, 'incorrect');
+                removeClass(currentWord.previousSibling.lastChild, 'correct');
+
+            }
+
+            if (currentLetter && !isFirstLetter) {
+                console.log("لازم يرجع حرف واحد")
+                removeClass(currentLetter, 'current');
+                const prevLetter = currentLetter?.previousElementSibling;
+                if (prevLetter) {
+                    addClass(prevLetter, 'current');
+                    removeClass(prevLetter, 'incorrect');
+                    removeClass(prevLetter, 'correct');
+                }
+
+            }
+
+            if (!currentLetter) {
+                const lastLetter = currentWord?.lastElementChild;
+                if (lastLetter) {
+                    addClass(lastLetter, 'current');
+                    removeClass(lastLetter, 'incorrect');
+                    removeClass(lastLetter, 'correct');
+                }
+            }
+
+        }
+    }
+
+    if (currentWord.getBoundingClientRect().top>100){
+
+    }
+
+
+
     // Update cursor position properly
+    // const nextLetter = document.querySelector('.letter.current');
+    // const nextWord = document.querySelector('.word.current');
+    // const cursor = document.getElementById('cursor');
+    //
+    // if (cursor && (nextLetter || nextWord)) {
+    //     const rect = (nextLetter || nextWord).getBoundingClientRect();
+    //     if (rect) {
+    //         cursor.style.top = rect.top + (nextLetter ? -2 : 2) + 'px';
+    //         cursor.style.left = rect[nextLetter ? 'left' : 'right'] + 'px';
+    //     }
+    // }
+
     const nextLetter = document.querySelector('.letter.current');
     const nextWord = document.querySelector('.word.current');
     const cursor = document.getElementById('cursor');
-
-    if (nextLetter || nextWord) {
-        cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + (nextLetter ? -2 : 2) + 'px';
-        cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px';
+    const targetElement = nextLetter || nextWord;
+    if (targetElement) {
+        const rect = targetElement.getBoundingClientRect();
+        cursor.style.top = rect.top + (nextLetter ? -2 : 2) + 'px';
+        cursor.style.left = rect[nextLetter ? 'left' : 'right'] + 'px';
     }
 
 

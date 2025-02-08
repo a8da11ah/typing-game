@@ -1,0 +1,18 @@
+Subject: [PATCH] fix div not closed
+---
+Index: .idea/src/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/src/index.html b/.idea/src/index.html
+--- a/.idea/src/index.html	(revision c29f2aafd79964d2cb7d5b53d71b7bdfc61016ef)
++++ b/.idea/src/index.html	(revision 2fb6d71bc54bf2d836a21dd27ed56fc9d9cc9f4b)
+@@ -13,6 +13,7 @@
+             <div id="info">30</div>
+             <div id="buttons">
+                 <button class="button-48" role="button"><span class="text">new game</span></button>
++            </div>
+         </div>
+         <div id="game" tabindex="1">
+             <div id="words">

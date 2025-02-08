@@ -151,8 +151,8 @@ div.word{
     height: 1.4rem;
     background-color: var(--primaryColor);
     position: fixed;
-    top:173px;
-    left: 398px;
+    top:202px;
+    left: 387px;
     animation: blink .5s infinite;
 }
 #game:focus #cursor{
