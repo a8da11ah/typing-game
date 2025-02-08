@@ -112,15 +112,6 @@ h1{
 /*}*/
 
 
-#game{
-    margin-top: 20px;
-    width: 600px;
-    position: relative;
-    /*border: orange solid 0.5px;*/
-    line-height: 30px;
-    height: 90px;
-    overflow:none;
-}
 div.word{
     display: inline-block;
     font-family: 'Roboto Mono',monospace;
@@ -128,9 +119,22 @@ div.word{
 }
 
 
+#game{
+    margin-top: 20px;
+    width: 600px;
+    line-height: 30px;
+    height: 150px;
+    overflow: hidden;
+    /*border: orange solid 0.5px;*/
+
+}
+
+
+
 #words{
     filter: blur(5px);
     color: var(--textSecondary);
+
 }
 #game:focus #words{
     filter: blur(0px);
@@ -143,6 +147,7 @@ div.word{
     inset: 0;
     text-align: center;
     align-self: center;
+    top: -75px;
 }
 
 #cursor{
