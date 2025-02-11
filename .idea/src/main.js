@@ -1,5 +1,10 @@
 const words ="The quick brown fox jumps over the lazy dog while the sun shines brightly in the clear blue sky. Programming is an essential skill in today's world, and JavaScript is one of the most popular languages. Developers use it to build websites, apps, and games that run smoothly on any device. Typing games help improve speed and accuracy, making them a great way to practice coding. As you type, focus on precision and avoid mistakes to achieve a high score. The more you play, the better you'll get at typing complex sentences and code snippets. Challenge yourself with different levels of difficulty and compete with friends to see who can type the fastest. Remember to take breaks and stretch your hands to avoid strain. Consistency is key to mastering any skill, so keep practicing every day. With dedication and effort, you'll soon notice significant improvements in your typing speed and coding abilities. Stay motivated and enjoy the process of learning something new. Good luck, and have fun playing the game!".split(' ');
 
+// حساب الوقت
+const gameTimer = 30 * 1000;
+window.timer = null;
+window.gameStart = null;
+
 
 function addClass(el,cName){
     el.className +=" "+cName;
@@ -27,7 +32,15 @@ function newGame() {
     }
     addClass(document.querySelector('.word'),'current')
     addClass(document.querySelector('.letter'),'current')
+    window.timer = null;
 }
+
+function gameOver() {
+    clearInterval(window.timer)
+    addClass(document.getElementById('game'),'over');
+}
+
+
 
 
 function extraLetters() {
@@ -37,6 +50,10 @@ function extraLetters() {
     currentWord.appendChild(incorrectLetter);
 }
 document.getElementById('game').addEventListener("keydown", ev => {
+
+    if (document.getElementById('game').classList.contains('over')) {
+        return;
+    }
     const key = ev.key;
     let currentWord = document.querySelector('.word.current')
     const currentLetter = document.querySelector('.letter.current');
@@ -47,6 +64,23 @@ document.getElementById('game').addEventListener("keydown", ev => {
     const isFirstLetter = currentLetter === currentWord.firstChild;
     console.log({key,expected})
 
+
+
+
+    if(!window.timer && isLetter) {
+        window.timer = setInterval(() => {
+            if (!window.gameStart){
+                window.gameStart = Date.now();
+            }
+            const currentTime = Date.now();
+            const elapsedTime = currentTime - window.gameStart;
+            const timeRemaining = gameTimer - elapsedTime;
+            if (timeRemaining <= 0) {
+                gameOver();
+            }
+            document.getElementById('info').innerHTML =  Math.round(timeRemaining / 1000); ;
+        }, 1000);
+    }
 
     if (isLetter) {
         if (currentLetter) {
