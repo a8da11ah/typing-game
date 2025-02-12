@@ -1,7 +1,7 @@
 const words ="The quick brown fox jumps over the lazy dog while the sun shines brightly in the clear blue sky. Programming is an essential skill in today's world, and JavaScript is one of the most popular languages. Developers use it to build websites, apps, and games that run smoothly on any device. Typing games help improve speed and accuracy, making them a great way to practice coding. As you type, focus on precision and avoid mistakes to achieve a high score. The more you play, the better you'll get at typing complex sentences and code snippets. Challenge yourself with different levels of difficulty and compete with friends to see who can type the fastest. Remember to take breaks and stretch your hands to avoid strain. Consistency is key to mastering any skill, so keep practicing every day. With dedication and effort, you'll soon notice significant improvements in your typing speed and coding abilities. Stay motivated and enjoy the process of learning something new. Good luck, and have fun playing the game!".split(' ');
 
 // حساب الوقت
-const gameTimer = 30 * 1000;
+const gameTimer = 10 * 1000;
 window.timer = null;
 window.gameStart = null;
 
@@ -26,19 +26,42 @@ function formatWord(word) {
 
 
 function newGame() {
+    window.gameStart = null;
+    removeClass(document.getElementById('game'),'over');
+
     document.getElementById('words').innerHTML = '';
     for (let i = 0; i <50; i++) {
         document.getElementById('words').innerHTML += formatWord(randomWord());
     }
     addClass(document.querySelector('.word'),'current')
     addClass(document.querySelector('.letter'),'current')
+    document.getElementById('info').innerHTML = gameTimer / 1000;
     window.timer = null;
+}
+
+function getWpm() { // الكلمات في الدقيقة
+    const words = [...document.querySelectorAll('.word')];
+    const lasttypedWord = document.querySelector('.word.current');
+    const index = words.indexOf(lasttypedWord);
+    const typedWords = words.slice(0,index);
+    const correctWords = typedWords.filter(word => {
+        const letters = [...word.children];
+        const correctLetters = letters.filter(letter => letter.classList.contains('correct'));
+        const incorrectLetters = letters.filter(letter => letter.classList.contains('incorrect'));
+        return correctLetters.length === letters.length && incorrectLetters.length === 0;
+    });
+    const wpm = correctWords.length / (gameTimer/1000/60);
+    return wpm;
 }
 
 function gameOver() {
     clearInterval(window.timer)
     addClass(document.getElementById('game'),'over');
+    const wpm = getWpm();
+    // alert(`Game Over! Your WPM: ${wpm}`);
+    document.getElementById('info').innerHTML = ` WPM: ${wpm}`;
 }
+
 
 
 
@@ -49,6 +72,13 @@ function extraLetters() {
     incorrectLetter.className = 'letter incorrect extra';
     currentWord.appendChild(incorrectLetter);
 }
+
+document.getElementById('new-game').addEventListener('click', () => {
+    const wpm = getWpm();
+    // alert(`Game Over! Your WPM: ${wpm}`);
+    document.getElementById('info').innerHTML = ` WPM: ${wpm}`;
+    newGame();
+});
 document.getElementById('game').addEventListener("keydown", ev => {
 
     if (document.getElementById('game').classList.contains('over')) {
@@ -77,6 +107,7 @@ document.getElementById('game').addEventListener("keydown", ev => {
             const timeRemaining = gameTimer - elapsedTime;
             if (timeRemaining <= 0) {
                 gameOver();
+                return;
             }
             document.getElementById('info').innerHTML =  Math.round(timeRemaining / 1000); ;
         }, 1000);
