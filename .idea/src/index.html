@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <title>Typing Game</title>
-    <link rel="stylesheet" href="style\style.css">
-    <link rel="stylesheet" href="style\side_panel.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style\style.css">
+    <link rel="stylesheet" href="style\side_panel.css">
+
+
     
 </head>
 <body>
@@ -19,7 +21,13 @@
 
 <!-- Panel -->
 <div id="side-panel" class="hidden">
-    <div id="panel-content" ></div>
+    <div id="panel-content" >
+        <div class="theme-container">
+            <button id="theme-toggle" aria-label="Toggle theme"><i class="fas fa-sun"></i></button>
+            <h5>night</h5>
+        </div>
+
+    </div>
 </div>
 
     <main>
@@ -44,5 +52,6 @@
     </main>
 <script src="js\sidePanelControl.js"></script>
 <script src="js\main.js"></script>
+<script src="js\theme.js"></script>
 </body>
 </html>
